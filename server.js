@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "app/public/home.html"));
+    res.sendFile(path.join(__dirname, "app/public/"+ htmlRoutes[0].info.dirPath));
   });
 
 
@@ -21,5 +21,6 @@ app.get("/", function(req, res) {
 // =============================================================
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
+    console.log(htmlRoutes[0].info["webPath"])
   });
   
