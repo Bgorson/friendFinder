@@ -53,7 +53,7 @@
     },
 
 ]
-    let questionNumber=0;
+    let questionNumber=1;
     for (i=0;i<questionList.length;i++){
         let newQuestion= $("<div><h1>Question: "+ questionNumber+ "</h1></div>")
         let questionText= $("<p>"+ questionList[i].question+ "</p>")
@@ -68,13 +68,13 @@
 let answerArray=[]
 $('#submit').on("click",function(){
     for (i=0;i<questionList.length;i++){
-        if($('#answer'+i).val()== "Choose..."){
+        if($('#answer'+(i+1)).val()== "Choose..."){
             answerArray=[];
             alert('Answer all the questions')
             return false;
         }
         else {
-        answerArray.push($("#answer"+i).val())
+        answerArray.push($("#answer"+(i+1)).val())
         }
   
     }
