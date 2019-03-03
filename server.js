@@ -2,7 +2,7 @@
 // =============================================================
 var express = require("express");
 var path = require("path");
-var htmlRoutes= require("./htmlRoutes.js")
+var htmlRoutes= require("./app/routing/htmlRoutes.js")
 // Sets up the Express App
 // =============================================================
 var app = express();
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "home.html"));
+    res.sendFile(path.join(__dirname, "app/public/home.html"));
   });
 
 
