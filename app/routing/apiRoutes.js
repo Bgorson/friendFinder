@@ -9,6 +9,7 @@ module.exports = function (app) {
         friendData.push(req.body);
         console.log("hit the post route")
         res.json(req.body)
+        console.log(req.body.name)
     })
 
 
