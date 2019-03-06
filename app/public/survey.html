@@ -1,85 +1,116 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Survey</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
+
 <body>
     <h1>Survey Questions</h1>
     <hr>
-    <div class= "container">
-    <h2>About You</h2>
-    <h4>Name (required)</h4>
-    <input id= "name" class="form-control" type="text" placeholder="Name">
-    <h4>Link to Image (required)</h4>
-    <input id= "image" class="form-control" type="text" placeholder="URL here">
-    <h4>Answer the following questions based on how much you agree with the statement</h4>
-    <div id= "questions">
-    
+    <div class="container">
+        <h2>About You</h2>
+        <h4>Name (required)</h4>
+        <input id="name" class="form-control" type="text" placeholder="Name">
+        <h4>Link to Image (required)</h4>
+        <input id="image" class="form-control" type="text" placeholder="URL here">
+        <h4>Answer the following questions based on how much you agree with the statement</h4>
+        <div id="questions">
+
+        </div>
+
+        <button id="submit" type="button" class="btn btn-primary my-1">Submit your answers</button>
+
     </div>
 
-     <button id="submit" type="button" class="btn btn-primary my-1">Submit your answers</button>
-
-</div>
-
-
-
+    <a href= "/api/friends">Friend API</a>
     <script type="text/javascript">
-    const questionList= [
-        {
-        question: "Cats are the best animals"
-    },        {
-        question: "Traveling is the best use of your disposable income"
-    },        {
-        question: "Video games are a waste of time"
-    },{
-        question: "Coffee is better than tea"
-    },{
-        question: "Exercise is a regular part of my routine"
-    },{
-        question: "Vacines cause autism"
-    },{
-        question: "Watching sports is awesome"
-    },{
-        question: "Staying up late is awesome!"
-    },{
-        question: "Placeholder Question"
-    },{
-        question: "Placeholder Question"
-    },
+        const questionList = [{
+            question: "Cats are the best animals"
+        }, {
+            question: "Traveling is the best use of your disposable income"
+        }, {
+            question: "Video games are a waste of time"
+        }, {
+            question: "Coffee is better than tea"
+        }, {
+            question: "Exercise is a regular part of my routine"
+        }, {
+            question: "Placeholder Question"
+        }, {
+            question: "Watching sports is awesome"
+        }, {
+            question: "Staying up late is awesome!"
+        }, {
+            question: "Placeholder Question"
+        }, {
+            question: "Placeholder Question"
+        }, ]
 
-]
-    let questionNumber=1;
-    for (i=0;i<questionList.length;i++){
-        let newQuestion= $("<div><h1>Question: "+ questionNumber+ "</h1></div>")
-        let questionText= $("<p>"+ questionList[i].question+ "</p>")
-        $(newQuestion).append(questionText)
-        let answerChoices= $('<select class="custom-select-sm" id="answer'+ questionNumber +'"><option selected>Choose...</option> <option value="1">1(Strongly Disagree)</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5(Strongly Agree)</option></select>')
-        $(newQuestion).append(answerChoices)
-        $("#questions").append(newQuestion)
+        function createSurvey() {
+            let questionNumber = 1;
+            for (i = 0; i < questionList.length; i++) {
+                let newQuestion = $("<div><h1>Question: " + questionNumber + "</h1></div>")
+                let questionText = $("<p>" + questionList[i].question + "</p>")
+                $(newQuestion).append(questionText)
+                let answerChoices = $('<select class="custom-select-sm" id="answer' + questionNumber +
+                    '"><option selected>Choose...</option> <option value="1">1(Strongly Disagree)</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5(Strongly Agree)</option></select>'
+                )
+                $(newQuestion).append(answerChoices)
+                $("#questions").append(newQuestion)
+                questionNumber++;
+            }
+        }
 
-    questionNumber++;
-    }
-   
-let answerArray=[]
-$('#submit').on("click",function(){
-    for (i=0;i<questionList.length;i++){
-        if($('#answer'+(i+1)).val()== "Choose..."){
-            answerArray=[];
-            alert('Answer all the questions')
-            return false;
+        function runSurvey() {
+            var currentURL = window.location.origin
+
+            $.ajax({
+                url: currentURL + "api/friends",
+                method: "GET"
+            }).done(function (friendData) {
+                console.log("Current URL:" + currentURL)
+            })
         }
-        else {
-        answerArray.push($("#answer"+(i+1)).val())
-        }
-  
-    }
-    console.log(answerArray)
-})
-            </script>
+
+
+        $('#submit').on("click", function (event) {
+            event.preventDefault();
+            let newFriend = {};
+            let answerArray = []
+            for (i = 0; i < questionList.length; i++) {
+                // if ($('#answer' + (i + 1)).val() == "Choose...") {
+                //     answerArray = [];
+                //     alert('Answer all the questions')
+                //     return false;
+                // } else {
+                    answerArray.push($("#answer" + (i + 1)).val())
+                // }
+            }
+            console.log(answerArray)
+            newFriend = {
+                name: $('#name').val().trim(),
+                photo: $('#image').val().trim(),
+                scores: answerArray
+            }
+            console.log(newFriend)
+
+            var currentURL = window.location.origin
+
+            $.post(currentURL + "/api/friends", newFriend, (function (data) {
+                console.log("your new friend was added" + JSON.stringify(data.name))
+            })
+        )
+        })
+
+        createSurvey();
+    </script>
 </body>
+
 </html>
