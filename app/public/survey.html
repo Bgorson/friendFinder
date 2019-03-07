@@ -29,10 +29,12 @@
 
     </div>
 
-    <a href= "/api/friends">Friend API</a>
+    <a href="/api/friends">Friend API</a>
     <script type="text/javascript">
-let newFriend = {};
-let answerArray = []
+jQuery.ajaxSettings.traditional = true;
+
+        let newFriend = {};
+        let answerArray = []
         const questionList = [{
             question: "Cats are the best animals"
         }, {
@@ -91,7 +93,7 @@ let answerArray = []
                 //     alert('Answer all the questions')
                 //     return false;
                 // } else {
-                    answerArray.push($("#answer" + (i + 1)).val())
+                answerArray.push($("#answer" + (i + 1)).val())
                 // }
             }
             newFriend = {
@@ -100,35 +102,27 @@ let answerArray = []
                 scores: answerArray
             }
             console.log("New friend object:" + JSON.stringify(newFriend))
-
             var currentURL = window.location.origin
-
             $.post(currentURL + "/api/friends", newFriend, (function (data) {
                 //ISSUE STARTS HERE
                 console.log("your new friend was added " + (JSON.stringify(data)))
-            })
-        )
+            }))
             displayResults(newFriend)
         })
 
-        function displayResults(submitFriend){
-            console.log("Person who added information scores:"+ submitFriend.scores)
+        function displayResults(submitFriend) {
+            console.log("Person who added information scores:" + submitFriend.scores)
             var currentURL = window.location.origin
-
             $.ajax({
                 url: currentURL + "/api/friends",
                 method: "GET"
             }).done(function (friendData) {
                 //compare scores here and pop up a modul
-                console.log("OG Data" +submitFriend.scores)
+                console.log("OG Data" + submitFriend.scores)
                 console.log("friendData " + friendData[0].scores)
             })
-
         }
-
         createSurvey();
-
-
     </script>
 </body>
 
