@@ -2,18 +2,30 @@
 <html>
 
 <head>
+        
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Survey</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
         crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
 </head>
 
 <body>
     <h1>Survey Questions</h1>
     <hr>
+    <div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h1>Here is your match!</h1>
+        <h2 id= "matchName"></h2>
+        <img id= "matchImage" class= "rounded mx-auto d-block w-50" src="#">
+      </div>
+    </div>
+
+
     <div class="container">
         <h2>About You</h2>
         <h4>Name (required)</h4>
@@ -30,6 +42,50 @@
     </div>
 
     <a href="/api/friends">Friend API</a>
+
+<style>
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  /* overflow: auto; Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+</style>
+
+
     <script type="text/javascript">
 jQuery.ajaxSettings.traditional = true;
 
@@ -88,13 +144,13 @@ jQuery.ajaxSettings.traditional = true;
             newFriend = {};
             answerArray = []
             for (i = 0; i < questionList.length; i++) {
-                // if ($('#answer' + (i + 1)).val() == "Choose...") {
-                //     answerArray = [];
-                //     alert('Answer all the questions')
-                //     return false;
-                // } else {
+                if ($('#answer' + (i + 1)).val() == "Choose...") {
+                    answerArray = [];
+                    alert('Answer all the questions')
+                    return false;
+                } else {
                 answerArray.push($("#answer" + (i + 1)).val())
-                // }
+                }
             }
             newFriend = {
                 name: $('#name').val().trim(),
@@ -104,25 +160,54 @@ jQuery.ajaxSettings.traditional = true;
             console.log("New friend object:" + JSON.stringify(newFriend))
             var currentURL = window.location.origin
             $.post(currentURL + "/api/friends", newFriend, (function (data) {
-                //ISSUE STARTS HERE
-                console.log("your new friend was added " + (JSON.stringify(data)))
             }))
             displayResults(newFriend)
         })
 
         function displayResults(submitFriend) {
-            console.log("Person who added information scores:" + submitFriend.scores)
             var currentURL = window.location.origin
             $.ajax({
                 url: currentURL + "/api/friends",
                 method: "GET"
             }).done(function (friendData) {
+                var friendDifferenceArray = [];
                 //compare scores here and pop up a modul
-                console.log("OG Data" + submitFriend.scores)
-                console.log("friendData " + friendData[0].scores)
+                for (n=0;n<friendData.length-1;n++){
+                    var friendDifference=0;
+                    for (i=0;i<friendData[0].scores.length;i++){
+                        friendDifference+=Math.abs((parseInt(friendData[n].scores[i])-parseInt(submitFriend.scores[i])))
+                    }
+                    friendDifferenceArray.push(friendDifference)
+
+                }
+                console.log("Array of differences" + friendDifferenceArray)
+                var min = friendDifferenceArray[0];
+                var minIndex=0;
+                for (var i=1;i <friendDifferenceArray.length;i++){
+                    if (friendDifferenceArray[i]<min){
+                        minIndex=i;
+                        min =friendDifferenceArray[i];
+                    }
+                }
+                modal(friendData[minIndex].name, friendData[minIndex].photo);
             })
         }
+
+        function modal(name,url){
+            console.log(name)
+            console.log(url)
+            $("#matchName").text(name)
+            $("#matchImage").attr("src",url)
+            $(".modal").css("display", "block");
+        }
+        
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() {
+$(".modal").css("display","none");
+}
+
         createSurvey();
+       
     </script>
 </body>
 
