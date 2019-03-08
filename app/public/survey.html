@@ -14,7 +14,9 @@
 </head>
 
 <body>
+    <div class = "jumbotron">
     <h1>Survey Questions</h1>
+</div>
     <hr>
     <div id="myModal" class="modal">
     <div class="modal-content">
@@ -27,12 +29,12 @@
 
 
     <div class="container">
-        <h2>About You</h2>
-        <h4>Name (required)</h4>
+        <h2 class ="mainHeaders">About You</h2>
+        <h4 class = "subHeaders">Name (required)</h4>
         <input id="name" class="form-control" type="text" placeholder="Name">
-        <h4>Link to Image (required)</h4>
+        <h4 class = "subHeaders">Link to Image (required)</h4>
         <input id="image" class="form-control" type="text" placeholder="URL here">
-        <h4>Answer the following questions based on how much you agree with the statement</h4>
+        <h4 id= "prompt">Answer the following questions based on how much you agree with the statement</h4>
         <div id="questions">
 
         </div>
@@ -44,7 +46,28 @@
     <a href="/api/friends">Friend API</a>
 
 <style>
-
+    #questions, #prompt {
+        margin-top:2em;
+        margin-bottom:2em;
+    }
+    #prompt{
+        font-size:40px;
+        color: #F2923F;
+    }
+.jumbotron {
+   color: #F6F9FA;
+   background-color: #F2923F;
+}
+body{
+    background-color: #E9EEEE;
+    
+}
+.subHeaders {
+    color: #FAD057
+}
+.mainHeaders {
+    color: #F7B142
+}
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -116,7 +139,7 @@ jQuery.ajaxSettings.traditional = true;
         function createSurvey() {
             let questionNumber = 1;
             for (i = 0; i < questionList.length; i++) {
-                let newQuestion = $("<div><h1>Question: " + questionNumber + "</h1></div>")
+                let newQuestion = $("<div><h4 class ='mainHeaders my-2'>Question: " + questionNumber + "</h4></div>")
                 let questionText = $("<p>" + questionList[i].question + "</p>")
                 $(newQuestion).append(questionText)
                 let answerChoices = $('<select class="custom-select-sm" id="answer' + questionNumber +
