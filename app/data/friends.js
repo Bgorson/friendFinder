@@ -2,7 +2,7 @@ const friends=
 [
 {
     "name":"Brandon",
-    "photo":"https://secure.i.telegraph.co.uk/multimedia/archive/03597/POTD_chick_3597497k.jpg",
+    "photo":"https://www.sciencemag.org/sites/default/files/styles/article_main_large/public/images/sn-bobkitten.jpg?itok=NtOKR3nD",
     "scores":[
         2,
         2,
