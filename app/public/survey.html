@@ -228,6 +228,14 @@ var span = document.getElementsByClassName("close")[0];
 span.onclick = function() {
 $(".modal").css("display","none");
 }
+var modalID = document.getElementById('myModal');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modalID) {
+    $(".modal").css("display","none");
+  }
+}
 
         createSurvey();
        
